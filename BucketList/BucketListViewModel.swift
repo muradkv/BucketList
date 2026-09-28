@@ -18,7 +18,7 @@ extension BucketListView {
         let savePath = URL.documentsDirectory.appending(path: "SavedPlaces")
         
         var isUnlocked = false
-    
+        
         init() {
             do {
                 let data = try Data(contentsOf: savePath)
@@ -53,6 +53,10 @@ extension BucketListView {
         }
         
         func authenticate() {
+#if targetEnvironment(simulator)
+            isUnlocked = true
+#else
+            
             let context = LAContext()
             var error: NSError?
             
@@ -62,7 +66,9 @@ extension BucketListView {
                 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
                     
                     if success {
-                        self.isUnlocked = true
+                        Task { @MainActor in
+                            self.isUnlocked = true
+                        }
                     } else {
                         // error
                     }
@@ -70,6 +76,7 @@ extension BucketListView {
             } else {
                 // no biometrics
             }
+#endif
         }
     }
 }
