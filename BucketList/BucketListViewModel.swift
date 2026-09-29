@@ -11,6 +11,7 @@ import LocalAuthentication
 
 extension BucketListView {
     @Observable
+    @MainActor
     class ViewModel {
         private(set) var locations: [Location]
         var selectedPlace: Location?
@@ -18,6 +19,7 @@ extension BucketListView {
         let savePath = URL.documentsDirectory.appending(path: "SavedPlaces")
         
         var isUnlocked = false
+        private(set) var isHybrid = false
         
         init() {
             do {
@@ -26,6 +28,10 @@ extension BucketListView {
             } catch {
                 locations = []
             }
+        }
+        
+        func setMapStyle(isHybrid: Bool) {
+            self.isHybrid = isHybrid
         }
         
         func addLocation(at point: CLLocationCoordinate2D) {

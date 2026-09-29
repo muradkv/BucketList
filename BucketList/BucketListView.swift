@@ -49,6 +49,21 @@ struct BucketListView: View {
                         viewModel.update(location: $0)
                     }
                 }
+                .mapStyle(viewModel.isHybrid ? .hybrid : .standard)
+                .safeAreaInset(edge: .bottom) {
+                    Picker("Map Style", selection: Binding(
+                        get: { viewModel.isHybrid },
+                        set: { viewModel.setMapStyle(isHybrid: $0)}
+                    )) {
+                        Text("Standard").tag(false)
+                        Text("Hybrid").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(8)
+                    .background(.ultraThinMaterial)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .padding(.horizontal)
+                }
             }
         } else {
             Button("Unlock Places", action: viewModel.authenticate)
