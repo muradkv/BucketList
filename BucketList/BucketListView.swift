@@ -71,6 +71,11 @@ struct BucketListView: View {
                 .background(.blue)
                 .foregroundStyle(.white)
                 .clipShape(.capsule)
+                .alert("Authentication Failed", isPresented: $viewModel.isShowingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(viewModel.errorMessage)
+                }
         }
     }
 }

@@ -21,6 +21,9 @@ extension BucketListView {
         var isUnlocked = false
         private(set) var isHybrid = false
         
+        var isShowingAlert = false
+        private(set) var errorMessage = ""
+        
         init() {
             do {
                 let data = try Data(contentsOf: savePath)
@@ -71,16 +74,18 @@ extension BucketListView {
                 
                 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
                     
-                    if success {
-                        Task { @MainActor in
+                    Task { @MainActor in
+                        if success {
                             self.isUnlocked = true
+                        } else {
+                            self.errorMessage = authenticationError?.localizedDescription ?? "Failed to authenticate. Please try again."
+                            self.isShowingAlert = true
                         }
-                    } else {
-                        // error
                     }
                 }
             } else {
-                // no biometrics
+                self.errorMessage = "Biometric authentication is unavailable. Please make sure Face ID or Touch ID is enabled in your device settings."
+                self.isShowingAlert = true
             }
 #endif
         }
