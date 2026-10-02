@@ -30,6 +30,8 @@ extension EditView {
         }
         
         func fetchNearbyPlaces() async {
+            loadingState = .loading
+            
             let urlString = "https://en.wikipedia.org/w/api.php?ggscoord=\(location.latitude)%7C\(location.longitude)&action=query&prop=coordinates%7Cpageimages%7Cpageterms&colimit=50&piprop=thumbnail&pithumbsize=500&pilimit=50&wbptterms=description&generator=geosearch&ggsradius=10000&ggslimit=50&format=json"
             
             guard let url = URL(string: urlString) else {
@@ -39,11 +41,18 @@ extension EditView {
             }
             
             do {
-                let (data, _) = try await URLSession.shared.data(from: url)
+                let (data, response) = try await URLSession.shared.data(from: url)
+                
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    loadingState = .failed
+                    return
+                }
+                
                 let items = try JSONDecoder().decode(Result.self, from: data)
                 pages = items.query.pages.values.sorted()
                 loadingState = .loaded
             } catch {
+                print("Failed to fetch nearby places: \(error.localizedDescription)")
                 loadingState = .failed
             }
         }

@@ -37,9 +37,17 @@ struct EditView: View {
                                 .italic()
                         }
                     case .loading:
-                        Text("Loading…")
+                        ProgressView("Loading…")
                     case .failed:
-                        Text("Please try again later.")
+                        HStack {
+                            Text("Failed to load nearby places.")
+                            Spacer()
+                            Button("Retry") {
+                                Task {
+                                    await viewModel.fetchNearbyPlaces()
+                                }
+                            }
+                        }
                     }
                 }
             }
