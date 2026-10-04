@@ -11,17 +11,10 @@ import MapKit
 struct BucketListView: View {
     @State private var viewModel = ViewModel()
     
-    let startPosition = MapCameraPosition.region(
-        MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 56, longitude: -3),
-            span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
-        )
-    )
-    
     var body: some View {
         if viewModel.isUnlocked {
             MapReader { proxy in
-                Map(initialPosition: startPosition) {
+                Map(initialPosition: viewModel.startPosition) {
                     ForEach(viewModel.locations) { location in
                         Annotation(location.name, coordinate: location.coordinate) {
                             Image(systemName: "star.circle")

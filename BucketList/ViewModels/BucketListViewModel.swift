@@ -24,6 +24,13 @@ extension BucketListView {
         var isShowingAlert = false
         private(set) var errorMessage = ""
         
+        let startPosition = MapCameraPosition.region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 56, longitude: -3),
+                span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
+            )
+        )
+        
         init() {
             do {
                 let data = try Data(contentsOf: savePath)
