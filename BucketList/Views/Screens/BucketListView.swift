@@ -17,18 +17,9 @@ struct BucketListView: View {
                 Map(initialPosition: viewModel.startPosition) {
                     ForEach(viewModel.locations) { location in
                         Annotation(location.name, coordinate: location.coordinate) {
-                            Image(systemName: "star.circle")
-                                .resizable()
-                                .foregroundStyle(.red)
-                                .frame(width: 44, height: 44)
-                                .background(.white)
-                                .clipShape(.circle)
-                                .simultaneousGesture(
-                                    LongPressGesture(minimumDuration: 0.5)
-                                        .onEnded { _ in
-                                            viewModel.selectedPlace = location
-                                        }
-                                )
+                            LocationAnnotationView {
+                                viewModel.selectedPlace = location
+                            }
                         }
                     }
                 }
