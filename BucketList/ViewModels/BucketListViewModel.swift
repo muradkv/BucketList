@@ -19,7 +19,7 @@ extension BucketListView {
         let savePath = URL.documentsDirectory.appending(path: "SavedPlaces")
         
         var isUnlocked = false
-        private(set) var isHybrid = false
+        var isHybrid = false
         
         var isShowingAlert = false
         private(set) var errorMessage = ""
@@ -38,10 +38,6 @@ extension BucketListView {
             } catch {
                 locations = []
             }
-        }
-        
-        func setMapStyle(isHybrid: Bool) {
-            self.isHybrid = isHybrid
         }
         
         func addLocation(at point: CLLocationCoordinate2D) {

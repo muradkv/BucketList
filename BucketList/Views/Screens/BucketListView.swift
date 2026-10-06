@@ -35,18 +35,7 @@ struct BucketListView: View {
                 }
                 .mapStyle(viewModel.isHybrid ? .hybrid : .standard)
                 .safeAreaInset(edge: .bottom) {
-                    Picker("Map Style", selection: Binding(
-                        get: { viewModel.isHybrid },
-                        set: { viewModel.setMapStyle(isHybrid: $0)}
-                    )) {
-                        Text("Standard").tag(false)
-                        Text("Hybrid").tag(true)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(8)
-                    .background(.ultraThinMaterial)
-                    .clipShape(.rect(cornerRadius: 12))
-                    .padding(.horizontal)
+                    MapStylePickerView(isHybrid: $viewModel.isHybrid)
                 }
             }
         } else {
