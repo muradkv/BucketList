@@ -1,15 +1,15 @@
 //
-//  Result.swift
+//  WikipediaResult.swift
 //  BucketList
 //
 //  Created by murad on 24.09.2026.
 //
 
-struct Result: Codable {
-    let query: Query
+struct WikipediaResult: Codable {
+    let query: WikipediaQuery
 }
 
-struct Query: Codable {
+struct WikipediaQuery: Codable {
     let pages: [Int: Page]
 }
 

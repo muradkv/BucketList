@@ -48,7 +48,7 @@ extension EditView {
                     return
                 }
                 
-                let items = try JSONDecoder().decode(Result.self, from: data)
+                let items = try JSONDecoder().decode(WikipediaResult.self, from: data)
                 pages = items.query.pages.values.sorted()
                 loadingState = .loaded
             } catch {
