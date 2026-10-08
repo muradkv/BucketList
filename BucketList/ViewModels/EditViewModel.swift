@@ -23,33 +23,23 @@ extension EditView {
         
         let location: Location
         
-        init(location: Location) {
+        private let service: WikipediaServiceProtocol
+        
+        init(location: Location, service: WikipediaServiceProtocol = WikipediaService() ) {
             self.location = location
             self.name = location.name
             self.description = location.description
+            self.service = service
         }
         
         func fetchNearbyPlaces() async {
             loadingState = .loading
             
-            let urlString = "https://en.wikipedia.org/w/api.php?ggscoord=\(location.latitude)%7C\(location.longitude)&action=query&prop=coordinates%7Cpageimages%7Cpageterms&colimit=50&piprop=thumbnail&pithumbsize=500&pilimit=50&wbptterms=description&generator=geosearch&ggsradius=10000&ggslimit=50&format=json"
-            
-            guard let url = URL(string: urlString) else {
-                print("Bad URL: \(urlString)")
-                loadingState = .failed
-                return
-            }
-            
             do {
-                let (data, response) = try await URLSession.shared.data(from: url)
-                
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                    loadingState = .failed
-                    return
-                }
-                
-                let items = try JSONDecoder().decode(WikipediaResult.self, from: data)
-                pages = items.query.pages.values.sorted()
+                pages = try await service.fetchNearbyPlaces(
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                )
                 loadingState = .loaded
             } catch {
                 print("Failed to fetch nearby places: \(error.localizedDescription)")
