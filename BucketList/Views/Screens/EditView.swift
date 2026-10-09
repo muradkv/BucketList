@@ -30,11 +30,7 @@ struct EditView: View {
                     switch viewModel.loadingState {
                     case .loaded:
                         ForEach(viewModel.pages, id: \.pageid) { page in
-                            Text(page.title)
-                                .font(.headline)
-                            + Text(": ") +
-                            Text(page.description)
-                                .italic()
+                            NearbyPlaceRowView(page: page)
                         }
                     case .loading:
                         ProgressView("Loading…")
